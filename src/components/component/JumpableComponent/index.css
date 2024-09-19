@@ -9,11 +9,11 @@
 }
 
 .jump {
-    transform: translateY(-100px);
+    transform: translateY(var(--jump-height));
 }
 
 .jumping {
-    animation: jump 0.25s ease-in-out both;
+    animation: jump var(--jump-time) ease-in-out both;
 }
 
 @keyframes jump {
@@ -22,7 +22,7 @@
     }
 
     50% {
-        transform: translateY(-100px);
+        transform: translateY(var(--jump-height));
     }
 
     100% {

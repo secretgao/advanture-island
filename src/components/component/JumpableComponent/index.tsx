@@ -1,20 +1,43 @@
 'use client'
 // components/JumpableComponent.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import './index.css';
-
-const JumpableComponent = () => {
+interface JumpableProps {
+    children: ReactNode;
+    jumpHeight: number; // 
+    onJumpEnd: () => void;
+    onJumpStart: () => void;
+    jumpTime: number;
+}
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace JSX {
+        interface IntrinsicAttributes {
+            style?: React.CSSProperties & {
+                ['--jump-height']?: string;
+                ['--jump-time']?: string;
+            };
+        }
+    }
+}
+const JumpableComponent: React.FC<JumpableProps> = (props) => {
     const [isJumping, setIsJumping] = useState(false);
     const elementRef = useRef<HTMLDivElement>(null);
 
     const handleJump = () => {
         if (elementRef.current) {
+            if (props.onJumpStart) {
+                props.onJumpStart();
+            }
             elementRef.current.classList.add('jump');
             setIsJumping(true);
             setTimeout(() => {
                 elementRef?.current?.classList.remove('jump');
                 setIsJumping(false);
-            }, 500); // 跳跃动画持续时间的一半
+                if (props.onJumpEnd) {
+                    props.onJumpEnd();
+                }
+            }, props.jumpTime); // 
         }
     };
 
@@ -30,10 +53,20 @@ const JumpableComponent = () => {
             window.removeEventListener('keydown', handleSpaceKeyPress);
         };
     }, []);
-
+    const jumpStyle = {
+        '--jump-height': `-${props.jumpHeight}px`,
+        '--jump-time': `${props.jumpTime}ms`,
+    };
     return (
-        <div ref={elementRef} onClick={handleJump} className={`component ${isJumping ? 'jumping' : ''}`}>
-            Jumpable Component
+        <div
+            ref={elementRef}
+            onClick={handleJump}
+            className={`component ${isJumping ? 'jumping' : ''}`}
+            style={jumpStyle as React.CSSProperties & {
+                ['--jump-height']?: string;
+                ['--jump-time']?: string;
+            }}>
+            {props.children}
         </div>
     );
 };

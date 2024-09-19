@@ -1,8 +1,16 @@
+'use client'
+
 import Image from 'next/image';
 import JumpableComponent from 'src/components/component/JumpableComponent';
 import ScaledComponent from 'src/components/component/ScaledComponent';
 import StyleControlComponent from 'src/components/component/StyleControlComponent/index';
 export default function Home() {
+  const jumpEnd = () => {
+    console.log("结束")
+  }
+  const jumpStart = () => {
+    console.log("开始")
+  }
   return (
     <div className="min-h-screen p-4 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2  sm:items-start">
@@ -11,8 +19,10 @@ export default function Home() {
         {/* <h2 className="text-2xl h-80 text-gray-400 border border-gray-300 p-2 w-full">
 
         </h2> */}
-        <JumpableComponent></JumpableComponent>
-        <ScaledComponent></ScaledComponent>
+        <JumpableComponent jumpHeight={100} onJumpEnd={jumpEnd} onJumpStart={jumpStart} jumpTime={1000} >123123</JumpableComponent>
+        <ScaledComponent enlargeRatio={1.2} narrowRatio={0.5} enlargeCallBack={() => { console.log('放大回调') }} narrowCallBack={() => {
+          console.log("缩小回调")
+        }}>放大缩小</ScaledComponent>
         <StyleControlComponent></StyleControlComponent>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center mt-8">
